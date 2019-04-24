@@ -8,20 +8,20 @@ services:
 before_install:
 # Use the Dockerfile.dev from the current directory "."
 # Tag the image, so we can easily reference it!
-  - docker build -t steve/stephen_docker_course_session10_react -f ./client/Dockerfile.dev ./client
+  - docker build -t laczor/stephen_docker_course_session10_react -f ./client/Dockerfile.dev ./client
 
 # Series of tasks, to execute the test
 # (if travis, will recieve other the 0 exit code, it assumes that it is failed)
 # We have to tell the test to exit if everything went well!
 script:
-  - docker run steve/stephen_docker_course_session10_react npm run test -- --coverage
+  - docker run laczor/stephen_docker_course_session10_react npm run test -- --coverage
 
 # We need to build all of the images!
 after_success:
-  - docker build -t steve/multi-client  ./client 
-  - docker build -t steve/multi-nginx  ./nginx
-  - docker build -t steve/multi-server  ./server
-  - docker build -t steve/multi-worker  ./worker
+  - docker build -t laczor/multi-client  ./client
+  - docker build -t laczor/multi-nginx  ./nginx
+  - docker build -t laczor/multi-server  ./server
+  - docker build -t laczor/multi-worker  ./worker
 
 # Login to docker
   # - echo "$DOCKER_PASSWORD" --> will recieve the password
@@ -30,7 +30,7 @@ after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
 # Need to push the built images (Login to docker CLI)
-  - docker push steve/multi-client
-  - docker push steve/multi-nginx
-  - docker push steve/multi-server
-  - docker push steve/multi-worker
+  - docker push laczor/multi-client
+  - docker push laczor/multi-nginx
+  - docker push laczor/multi-server
+  - docker push laczor/multi-worker
