@@ -1,0 +1,36 @@
+# We need superuser permissions!
+
+sudo: required
+# Tells travis, that we need a copy of docker to be ready
+services:
+  - docker
+# Some series of tasks prior test or deployment
+before_install:
+# Use the Dockerfile.dev from the current directory "."
+# Tag the image, so we can easily reference it!
+  - docker build -t steve/stephen_docker_course_session10_react  -f ./client/Dockerfile.dev .
+
+# Series of tasks, to execute the test
+# (if travis, will recieve other the 0 exit code, it assumes that it is failed)
+# We have to tell the test to exit if everything went well!
+script:
+  - docker run steve/stephen_docker_course_session10_react npm run test -- --coverage
+
+# We need to build all of the images!
+after_success:
+  - docker build -t steve/multi-client  -f ./client .
+  - docker build -t steve/multi-nginx  -f ./nginx .
+  - docker build -t steve/multi-server  -f ./server .
+  - docker build -t steve/multi-worker  -f ./worker .
+
+# Login to docker
+  # - echo "$DOCKER_PASSWORD" --> will recieve the password
+  # - | --> will redirect this value to the standard Input of the next process
+  # --password-std will tell that this password will be recieved from the standard input
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+# Need to push the built images (Login to docker CLI)
+  - docker push steve/multi-client
+  - docker push steve/multi-nginx
+  - docker push steve/multi-server
+  - docker push steve/multi-worker
