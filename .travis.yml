@@ -8,7 +8,7 @@ services:
 before_install:
 # Use the Dockerfile.dev from the current directory "."
 # Tag the image, so we can easily reference it!
-  - docker build -t steve/stephen_docker_course_session10_react  -f ./client/Dockerfile.dev .
+  - docker build -t steve/stephen_docker_course_session10_react -f ./client/Dockerfile.dev ./client
 
 # Series of tasks, to execute the test
 # (if travis, will recieve other the 0 exit code, it assumes that it is failed)
@@ -18,10 +18,10 @@ script:
 
 # We need to build all of the images!
 after_success:
-  - docker build -t steve/multi-client  -f ./client .
-  - docker build -t steve/multi-nginx  -f ./nginx .
-  - docker build -t steve/multi-server  -f ./server .
-  - docker build -t steve/multi-worker  -f ./worker .
+  - docker build -t steve/multi-client  ./client 
+  - docker build -t steve/multi-nginx  ./nginx
+  - docker build -t steve/multi-server  ./server
+  - docker build -t steve/multi-worker  ./worker
 
 # Login to docker
   # - echo "$DOCKER_PASSWORD" --> will recieve the password
